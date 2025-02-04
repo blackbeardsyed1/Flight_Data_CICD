@@ -11,7 +11,7 @@ default_args = {
     'depends_on_past': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
-    'start_date': datetime(2024, 12, 14),
+    'start_date': datetime(2025, 2, 5),
 }
 
 # Define the DAG
@@ -41,7 +41,7 @@ with DAG(
     file_sensor = GCSObjectExistenceSensor(
         task_id="check_file_arrival",
         bucket=gcs_bucket,
-        object=f"airflow-project-1/source-{env}/flight_booking.csv",  # Full file path in GCS
+        object=f"airflow-project-bigquery/source-{env}/flight_booking.csv",  # Full file path in GCS
         google_cloud_conn_id="google_cloud_default",  # GCP connection
         timeout=300,  # Timeout in seconds
         poke_interval=30,  # Time between checks
@@ -51,7 +51,7 @@ with DAG(
     # Task 2: Submit PySpark job to Dataproc Serverless
     batch_details = {
         "pyspark_batch": {
-            "main_python_file_uri": f"gs://{gcs_bucket}/airflow-project-1/spark-job/spark_transformation_job.py",  # Main Python file
+            "main_python_file_uri": f"gs://{gcs_bucket}/spark-job/spark_transformation_job.py",  # Main Python file
             "python_file_uris": [],  # Python WHL files
             "jar_file_uris": [],  # JAR files
             "args": [
@@ -68,9 +68,9 @@ with DAG(
         },
         "environment_config": {
             "execution_config": {
-                "service_account": "70622048644-compute@developer.gserviceaccount.com",
-                "network_uri": "projects/psyched-service-442305-q1/global/networks/default",
-                "subnetwork_uri": "projects/psyched-service-442305-q1/regions/us-central1/subnetworks/default",
+                "service_account": "1048483748912-compute@developer.gserviceaccount.com",
+                "network_uri": "projects/marine-outpost-444316-s2/global/networks/default",
+                "subnetwork_uri": "projects/marine-outpost-444316-s2/regions/us-central1/subnetworks/default",
             }
         },
     }
@@ -79,7 +79,7 @@ with DAG(
         task_id="run_spark_job_on_dataproc_serverless",
         batch=batch_details,
         batch_id=batch_id,
-        project_id="psyched-service-442305-q1",
+        project_id="marine-outpost-444316-s2",
         region="us-central1",
         gcp_conn_id="google_cloud_default",
     )
