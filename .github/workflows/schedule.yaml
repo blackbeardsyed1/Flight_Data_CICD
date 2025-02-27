@@ -1,0 +1,13 @@
+name: Scheduled Workflow
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Trigger every day at midnight UTC
+
+jobs:
+  run_scheduled_task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo current time
+        run: echo "The current date is $(date)"
+        
