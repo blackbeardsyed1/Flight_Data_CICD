@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  hello_world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Echo basic Information'
+        run: |
+          echo "REF : $GITHUB_REF"
+          echo "JOB : $GITHUB_JOB"
+          echo "ACTION : $GITHUB_ACTION"
+          echo "ACTOR : $GITHUB_ACTOR"
